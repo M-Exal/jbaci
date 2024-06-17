@@ -1,0 +1,69 @@
+BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
+Source file: C:\Users\bu0532\jbaci\examples\Suspension.pm  Mon Jun 17 15:20:58 2024
+ line  pc
+   1    0  program Suspension;
+   2    0  
+   3    0  monitor PC;
+   4    0  const nmrProcesos = 20;
+   5    0  var i:INTEGER;
+   6    0  var delayed:array[0..nmrProcesos] of boolean;
+   7    0  var time:array[0..nmrProcesos] of integer;
+   8    0  var cond:array[0..nmrProcesos] of CONDITION;
+   9    0  	
+  10    0  procedure oneSecondHasPassed;
+  11    0  var i: INTEGER;
+  12    0  begin
+  13    1  	for i:= 1 to nmrProcesos do
+  14    5  	begin
+  15    5  		IF delayed[i] then 
+  16   10  		begin
+  17   10  			time[i]:= time[i] - 1;
+  18   20  			IF time[i] = 0 then 
+  19   27  			begin
+  20   27  				delayed[i]:= false;
+  21   32  				SIGNALC (cond[i]);
+  22   36  			end;
+  23   36  		end;
+  24   36  	end;
+  25   37  end;
+  26   39  
+  27   39  procedure delayMe (myself: INTEGER; interval: INTEGER);
+  28   39  begin
+  29   40  	(* it suspends the process identified by myself for interval seconds *)
+  30   40  	delayed[myself]:=TRUE;
+  31   45  	time[myself]:=interval;
+  32   50  	WAITC(cond[myself]);
+  33   55  end;
+  34   57  
+  35   57  begin (* monitor *)
+  36   57  	for i:=1 to nmrProcesos do begin
+  37   61  		delayed[i]:=false;
+  38   66  		time[i]:=0;
+  39   71  	end;
+  40   72  end;
+  41   73  
+  42   73  (*const nmrProcesos = 20;*)
+  43   73  var i: INTEGER;
+  44   73  currentTime: INTEGER:= 0;
+  45   73  output: BINARYSEM := 1;
+  46   73  
+  47   73  procedure clock;
+  48   73  var i, j: integer;
+  49   73  begin
+  50   73  	for i:= 1 to 10 do 
+  51   77  	begin
+  52   77  		for j:= 1 to 200 do 
+  53   81  		begin
+  54   81  		end;
+  55   82  		currentTime := currentTime + 1;
+  56   87  		WAIT(output);
+  57   89  		writeln ("1 second passed. Current time: ", currentTime, " seconds");
+  58   94  		SIGNAL(output);
+  59   96  		oneSecondHasPassed;
+  60   99  	end;
+  61  100  end;
+  62  101  
+  63  101  procedure process (ID: integer);
+Error near 'process', line 63 of file C:\Users\bu0532\jbaci\examples\Suspension.pm:
+**   syntax error 
+Because of 1 error the PCODE file will not execute
