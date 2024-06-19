@@ -1,0 +1,54 @@
+BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
+Source file: C:\Users\bu0532\jbaci\examples\test.pm  Wed Jun 19 14:39:38 2024
+ line  pc
+   1    0  Program Suspension;
+   2    0  monitor PC;
+   3    0  const nmrProcesses = 20;
+   4    0  var i: INTEGER;
+   5    0  delayed: array[0..nmrProcesses] of boolean;
+   6    0  time: array[0..nmrProcesses] of integer;
+   7    0  cond: array[0..nmrProcesses] of CONDITION;
+   8    0  procedure oneSecondHasPassed;
+   9    0  var i: INTEGER;
+  10    0  begin
+  11    1  for i:= 1 to nmrProcesses do
+  12    5  IF delayed[i] then begin
+  13   10  time[i]:= time[i] - 1;
+  14   20  IF time[i] = 0 then begin
+  15   27  delayed[i]:= false;
+  16   32  SIGNALC (cond[i]);
+  17   36  end
+  18   36  end
+  19   36  end;
+  20   39  procedure delayMe (myself: INTEGER; intervalo: INTEGER);
+  21   39  begin
+  22   40  delayed [myself]:= TRUE;
+  23   45  time [myself]:= intervalo;
+  24   50  WAITC (cond[myself]);
+  25   55  end;
+  26   57  begin (* del monitor *)
+  27   57  for i:= 1 to nmrProcesses do begin
+  28   61  delayed[i]:= false;
+  29   66  time[i]:= 0;
+  30   71  end;
+  31   72  end;
+  32   73  const nmrProcesses = 20;
+  33   73  var i: INTEGER;
+  34   73  currentTime: INTEGER:= 0;
+  35   73  output: BINARYSEM := 1;
+  36   73  procedure reloj;
+  37   73  var i, j: integer;
+  38   73  begin
+  39   73  for i:= 1 to 10 do begin
+  40   77  for j:= 1 to 200 do;
+  41   82  currentTime:= currentTime + 1;
+  42   87  WAIT (output);
+  43   89  writeln ("1 second has passed. Current time: “, currentTime,” seconds");
+  44   91  SIGNAL (output);
+  45   93  oneSecondHasPassed;
+  46   96  end;
+  47   97  end;
+  48   98  procedure process (ID: integer);
+Error near 'process', line 48 of file C:\Users\bu0532\jbaci\examples\test.pm:
+**   syntax error 
+Because of 1 error the PCODE file will not execute
