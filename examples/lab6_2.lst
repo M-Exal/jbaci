@@ -1,61 +1,58 @@
 BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
-Source file: C:\Users\bu0532\jbaci\examples\lab6_2.pm  Wed Jun 19 15:22:49 2024
+Source file: C:\Users\bu0532\jbaci\examples\lab6_2.pm  Wed Jun 19 15:58:18 2024
  line  pc
    1    0  Program Suspension;
    2    0  MONITOR PC;
    3    0  CONST nmrProcesos = 20;
    4    0  VAR i:INTEGER;
-   5    0  	delayed:array[0..nmrProcesos] of BOOLEAN;
-   6    0  	time:array[0..nmrProcesos] of INTEGER;
-   7    0  	cond:array[0..nmrProcesos] of CONDITION;
+   5    0      delayed:array[0..nmrProcesos] of BOOLEAN;
+   6    0      time:array[0..nmrProcesos] of INTEGER;
+   7    0      cond:array[0..nmrProcesos] of CONDITION;
    8    0  
-   9    0  
-  10    0  PROCEDURE oneSecondHasPassed;
-  11    0  VAR i:INTEGER;
-  12    0  BEGIN
-  13    1  	FOR i:=0 TO nmrProcesos-1 DO
-  14    7  	IF delayed[i] THEN BEGIN
-  15   12  		time[i] := time[i] - 1;
-  16   22  		IF time[i] = 0 THEN BEGIN
-  17   29  			delayed[i] := false;
-  18   34  			SIGNALC(cond[i]);
-  19   38  		END;
-  20   38  	END;
-  21   39  END;
-  22   41  
-  23   41  PROCEDURE delayMe(myself: INTEGER; interval: INTEGER);
-  24   41  BEGIN
-  25   42  	delayed[myself] := true;
-  26   47  	time[myself] := interval;
-  27   52  	WAITC(cond[myself]);
-  28   57  END;
-  29   59  
-  30   59  BEGIN (*monitor*)
-  31   59  	FOR i:= 0 TO nmrProcesos-1 DO BEGIN
-  32   65  	delayed[i] := false;
-  33   70  	time[i] := 0;
-  34   75  	END;
-  35   76  END;
-  36   77  
-  37   77  VAR i:INTEGER;
-  38   77  VAR currentTime:INTEGER := 0;
-  39   77  VAR output:BINARYSEM := 1;
-  40   77  
-  41   77  PROCEDURE clock;
-  42   77  VAR 
-  43   77  	i:INTEGER;
-  44   77  	j:INTEGER;
-  45   77  BEGIN
-  46   77  	FOR i := 1 to 10 DO BEGIN
-  47   81  	FOR j := 1 to 200 DO;
-  48   86  	currentTime := currentTime + 1;
-  49   91  	WAIT(output);
-  50   93  		writeln("1 second passed. CurrentTime: ", currentTime, " seconds.");
-  51   98  	SIGNAL(output);
-  52  100  	END;
-  53  101  END;
-  54  102  
-  55  102  PROCEDURE process(ID: INTEGER);
-Error near 'process', line 55 of file C:\Users\bu0532\jbaci\examples\lab6_2.pm:
+   9    0  PROCEDURE oneSecondHasPassed;
+  10    0  VAR i:INTEGER;
+  11    0  BEGIN
+  12    1      FOR i:=1 TO nmrProcesos DO
+  13    5      IF delayed[i] THEN BEGIN
+  14   10          time[i] := time[i] - 1;
+  15   20          IF time[i] = 0 THEN BEGIN
+  16   27              delayed[i] := false;
+  17   32              SIGNALC(cond[i]);
+  18   36          END;
+  19   36      END;
+  20   37  END;
+  21   39  
+  22   39  PROCEDURE delayMe(myself: INTEGER; interval: INTEGER);
+  23   39  BEGIN
+  24   40      delayed[myself] := true;
+  25   45      time[myself] := interval;
+  26   50      WAITC(cond[myself]);
+  27   55  END;
+  28   57  
+  29   57  BEGIN (*monitor*)
+  30   57      FOR i:= 0 TO nmrProcesos DO BEGIN
+  31   61      delayed[i] := false;
+  32   66      time[i] := 0;
+  33   71      END;
+  34   72  END;
+  35   73  
+  36   73  VAR i:INTEGER;
+  37   73  currentTime:INTEGER := 0;
+  38   73  output:BINARYSEM := 1;
+  39   73  
+  40   73  PROCEDURE clock;
+  41   73  VAR i,j:INTEGER;
+  42   73  
+  43   73  BEGIN
+  44   73      FOR i := 1 to 10 DO
+  45   77      	FOR j := 1 to 200 DO
+  46   81      		currentTime := currentTime + 1;
+  47   88      		WAIT(output);
+  48   90      		    writeln("1 second passed. CurrentTime: ", currentTime, " seconds.");
+  49   95     		SIGNAL(output);
+  50   97  		oneSecondHasPassed;
+  51  100      		END;
+  52  101  	END;
+Error near 'END', line 52 of file C:\Users\bu0532\jbaci\examples\lab6_2.pm:
 **   syntax error 
 Because of 1 error the PCODE file will not execute
