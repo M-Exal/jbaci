@@ -12,22 +12,20 @@ procedure Append(V: integer);
 begin
 	if Count = N then
 		WaitC(NotFull);
-		Buffer[Newest] := V;
-		Newest := (Newest + 1) mod N;
-		Count := Count + 1;
-		SignalC(NotEmpty);
+	Buffer[Newest] := V;
+	Newest := (Newest + 1) mod N;
+	Count := Count + 1;
+	SignalC(NotEmpty);
 end;
 
 procedure Take(var V: Integer);
 begin
 	if Count = 0 then
-	begin
 		WaitC(NotEmpty);
-		V := Buffer[Oldest];
-		Oldest := (Oldest + 1) mod N;
-		Count := Count - 1;
-		SignalC(NotFull);
-	end;
+	V := Buffer[Oldest];
+	Oldest := (Oldest + 1) mod N;
+	Count := Count - 1;
+	SignalC(NotFull);
 end;
 
 begin

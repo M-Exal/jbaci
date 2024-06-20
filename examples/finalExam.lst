@@ -1,0 +1,42 @@
+BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
+Source file: C:\Users\bu0532\jbaci\examples\finalExam.pm  Thu Jun 20 11:12:42 2024
+ line  pc
+   1    0  program barrier;
+   2    0  
+   3    0  MONITOR M;
+   4    0  CONST numProcesos = 3;
+   5    0  VAR okToGo:CONDITION;
+   6    0  	n:INTEGER:=0;
+   7    0  
+   8    0  PROCEDURE enter;
+   9    0  BEGIN
+  10    1  	n := n+1;
+  11    6  	IF n < numProcesos THEN
+  12   10  		WAITC(okToGo);
+  13   13  	signalC(okToGo);
+  14   15  END;
+  15   17  
+  16   17  PROCEDURE exit;
+  17   17  BEGIN
+  18   18  	n := n-1;
+  19   23  	IF n > numProcesos THEN
+  20   27  		WAITC(okToGo);
+  21   30  	signalC(okToGo);
+  22   32  END;
+  23   34  
+  24   34  BEGIN
+  25   37  END;
+  26   38  
+  27   38  PROCEDURE proceso(i:INTEGER);
+  28   38  BEGIN
+  29   38  	enter;
+  30   41  	writeln("in");
+  31   43  	exit;
+  32   46  	writeln("out");
+  33   48  END;
+  34   49  
+  35   49  BEGIN
+  36   50  	COBEGIN;
+  37   51  		proceso(1); proceso(2); proceso(3);
+  38   60  	COEND;
+  39   61  END.

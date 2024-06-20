@@ -1,0 +1,70 @@
+BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
+Source file: C:\Users\bu0532\jbaci\examples\lab6_1.pm  Thu Jun 20 10:48:41 2024
+ line  pc
+   1    0  program ProducerConsumer;
+   2    0  monitor PC;
+   3    0  const N = 5;
+   4    0  var Oldest: integer;
+   5    0  	Newest:integer;
+   6    0  	Count: integer;
+   7    0  	NotEmpty: Condition;
+   8    0  	NotFull: Condition;
+   9    0  	Buffer: array[0..N] of integer;
+  10    0  
+  11    0  procedure Append(V: integer);
+  12    0  begin
+  13    1  	if Count = N then
+  14    5  		WaitC(NotFull);
+  15    8  	Buffer[Newest] := V;
+  16   13  	Newest := (Newest + 1) mod N;
+  17   20  	Count := Count + 1;
+  18   25  	SignalC(NotEmpty);
+  19   27  end;
+  20   29  
+  21   29  procedure Take(var V: Integer);
+  22   29  begin
+  23   30  	if Count = 0 then
+  24   34  		WaitC(NotEmpty);
+  25   37  	V := Buffer[Oldest];
+  26   43  	Oldest := (Oldest + 1) mod N;
+  27   50  	Count := Count - 1;
+  28   55  	SignalC(NotFull);
+  29   57  end;
+  30   59  
+  31   59  begin
+  32   59  	Count := 0; Oldest := 0; Newest := 0;
+  33   68  end;
+  34   69  
+  35   69  VAR output: BINARYSEM;
+  36   69  const Values = 20;
+  37   69  
+  38   69  procedure Producer(ID: integer);
+  39   69  var I: integer;
+  40   69  begin
+  41   69  	for I := 1 to Values do
+  42   73  	begin
+  43   73  		WAIT (output);
+  44   75  			writeln ("Producer ", ID, " producing ", ID*100+I);
+  45   86  		SIGNAL (output);
+  46   88  		Append(ID*100+I);
+  47   96  	end;
+  48   97  end;
+  49   98  
+  50   98  procedure Consumer(ID: integer);
+  51   98  var I, J: integer;
+  52   98  begin
+  53   98  	for I := 1 to 10 do
+  54  102  	begin
+  55  102  		Take(J);
+  56  106  		WAIT (output);
+  57  108  			writeln ("Consumer ", ID, " consuming ", J);
+  58  115  		SIGNAL (output);
+  59  117  	end;
+  60  118  end;
+  61  119  
+  62  119  begin
+  63  120  	INITIALSEM (output, 1);
+  64  123  	cobegin
+  65  124  		Producer(1); Producer(2); Producer(3); Consumer(1); Consumer(2); Consumer(3); Consumer(4); Consumer(5); Consumer(6);
+  66  151  	coend;
+  67  152  end.
