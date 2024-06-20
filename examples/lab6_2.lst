@@ -1,5 +1,5 @@
 BACI System: BenAri Pascal PCODE Compiler, 12:29  18 Jul 2004
-Source file: C:\Users\bu0532\jbaci\examples\lab6_2.pm  Wed Jun 19 15:58:18 2024
+Source file: C:\Users\bu0532\jbaci\examples\lab6_2.pm  Thu Jun 20 10:04:18 2024
  line  pc
    1    0  Program Suspension;
    2    0  MONITOR PC;
@@ -44,15 +44,37 @@ Source file: C:\Users\bu0532\jbaci\examples\lab6_2.pm  Wed Jun 19 15:58:18 2024
   41   73  VAR i,j:INTEGER;
   42   73  
   43   73  BEGIN
-  44   73      FOR i := 1 to 10 DO
-  45   77      	FOR j := 1 to 200 DO
+  44   73      FOR i := 1 to 10 DO BEGIN;
+Error near 'DO', line 44 of file C:\Users\bu0532\jbaci\examples\lab6_2.pm:
+**   Illegal character '\d' 
+  45   77      	FOR j := 1 to 200 DO BEGIN;
   46   81      		currentTime := currentTime + 1;
-  47   88      		WAIT(output);
-  48   90      		    writeln("1 second passed. CurrentTime: ", currentTime, " seconds.");
-  49   95     		SIGNAL(output);
-  50   97  		oneSecondHasPassed;
-  51  100      		END;
-  52  101  	END;
-Error near 'END', line 52 of file C:\Users\bu0532\jbaci\examples\lab6_2.pm:
-**   syntax error 
+  47   86      		WAIT(output);
+  48   88      		    writeln("1 second passed. CurrentTime: ", currentTime, " seconds.");
+  49   93     		SIGNAL(output);
+  50   95  		oneSecondHasPassed;
+  51   98      		END;
+  52   99  	END;
+  53  100  END;
+  54  101  
+  55  101  PROCEDURE procesos(ID: INTEGER);
+  56  101  BEGIN
+  57  101      WAIT(output);
+  58  103          writeln("I am the process ", ID, " and I go to sleep for ", ID*2, " seconds. Current time: ", currentTime);
+  59  115      SIGNAL(output);
+  60  117      delayMe(ID, ID * 2);
+  61  124      WAIT(output);
+  62  126          writeln("I am the process", ID, " and I just woke up. Current time: ", currentTime);
+  63  133      SIGNAL(output);
+  64  135  END;
+  65  136  
+  66  136  BEGIN
+  67  143      COBEGIN
+  68  144          clock;
+  69  146          procesos(1);
+  70  149          procesos(2);
+  71  152          procesos(3);
+  72  155          procesos(4);
+  73  158      COEND;
+  74  159  END.
 Because of 1 error the PCODE file will not execute

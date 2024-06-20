@@ -41,8 +41,8 @@ PROCEDURE clock;
 VAR i,j:INTEGER;
 
 BEGIN
-    FOR i := 1 to 10 DO
-    	FOR j := 1 to 200 DO
+    FOR i := 1 to 10 DO BEGIN;
+    	FOR j := 1 to 200 DO BEGIN;
     		currentTime := currentTime + 1;
     		WAIT(output);
     		    writeln("1 second passed. CurrentTime: ", currentTime, " seconds.");
@@ -52,7 +52,7 @@ BEGIN
 	END;
 END;
 
-PROCEDURE process(ID: INTEGER);
+PROCEDURE procesos(ID: INTEGER);
 BEGIN
     WAIT(output);
         writeln("I am the process ", ID, " and I go to sleep for ", ID*2, " seconds. Current time: ", currentTime);
@@ -66,9 +66,9 @@ END;
 BEGIN
     COBEGIN
         clock;
-        process(1);
-        process(2);
-        process(3);
-        process(4);
+        procesos(1);
+        procesos(2);
+        procesos(3);
+        procesos(4);
     COEND;
 END.
